@@ -12,7 +12,9 @@ const Index = () => {
     return (
         <>
             <h1>Insira o a mensagem ou link a ser utilizado no QR-Code:</h1>
+
             <br></br>
+
             <h3>Deseja gerar um link ou texto?</h3>
 
             <input name="qr-type" type="radio" id="Link" value="Link" checked></input>
@@ -22,7 +24,9 @@ const Index = () => {
             <label for="Texto">Texto</label>
 
             <br></br>
+
             <h3>Seu texto do QR-Code</h3>
+            
             <input name="msg" id="msg"></input>
             <button type="submit" id="btn" onClick={handleClick}>Gerar QR-Code</button>
         </>
