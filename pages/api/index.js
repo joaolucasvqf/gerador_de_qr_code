@@ -5,7 +5,7 @@ export default(req, res) => {
     const svg = new QRCode({
         content: url,
         padding: 4,
-        ecl: "H",
+        ecl: 'Q',
         join: true
     });
 
