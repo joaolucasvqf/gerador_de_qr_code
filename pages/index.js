@@ -2,7 +2,12 @@ const Index = () => {
   
     const handleClick = (e) => {
         var mensagem = document.getElementById("msg").value; 
-        window.location.href = "/api?url=" + mensagem;
+        var type = document.querySelector('input[name="qr-type"]:checked').value;
+        if (type == "Link") {
+            window.location.href = "/api?url=" + mensagem;
+        } else {
+            window.location.href = "/api?url=" + encodeURI(mensagem);
+        }
     }
     return (
         <>
@@ -10,6 +15,18 @@ const Index = () => {
 
             <br></br>
 
+            <h3>Deseja gerar um link ou texto?</h3>
+
+            <input name="qr-type" type="radio" id="Link" value="Link" checked></input>
+            <label for="Link">Link</label>
+
+            <input name="qr-type" type="radio" id="Texto" value="Texto"></input>
+            <label for="Texto">Texto</label>
+
+            <br></br>
+
+            <h3>Seu texto do QR-Code</h3>
+            
             <input name="msg" id="msg"></input>
             <button type="submit" id="btn" onClick={handleClick}>Gerar QR-Code</button>
         </>
