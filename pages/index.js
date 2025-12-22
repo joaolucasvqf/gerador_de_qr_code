@@ -1,44 +1,61 @@
 const Index = () => {
-  
+    var selectedType = "Link";
+    var selectedPixType = "cpf"
     const handleClick = (e) => {
         var mensagem = document.getElementById("msg").value; 
-        var type = document.getElementsByName('qr-type').forEach(i => {if(i.checked) { return i.value }});
-        if (type == "Pix") {
-            var selectedPixType = document.getElementsByName('pixType').forEach(i => {if(i.checked) { return i.value }});
-            window.location.href = "/api?url=" + mensagem + "&type=pix"
-                + "&pixType=" + selectedPixType;
+        var pixKey = document.getElementById("pixKey").value;
+        var pixName = document.getElementById("pixName").value;
+        var pixCity = document.getElementById("pixCity").value;
+        if (selectedType == "Pix") {
+            window.location.href = "/api?message=" + encodeURI(mensagem) + 
+                "&type=pix"
+                + "&pixType=" + selectedPixType
+                + "&key=" + pixKey
+                + "&name=" + encodeURI(pixName)
+                + "&city=" + encodeURI(pixCity);
         } else {        
-            window.location.href = "/api?url=" + encodeURI(mensagem) + "&type=text";
+            window.location.href = "/api?url=" + encodeURI(mensagem) + "&type=" + selectedType;
         }
     }
+
+    const handlePixKeyTypeChange = (e) => {
+        selectedPixType = e.target.value;
+        console.log("Chave Pix selecionada: " + selectedPixType);
+        var phonePixKey = document.getElementById("phonePixKey");
+        var emailPixKey = document.getElementById("emailPixKey");
+        var cpfPixKey = document.getElementById("cpfPixKey");
+        if (selectedPixType == "phone") {
+            phonePixKey.hidden = false;
+            emailPixKey.hidden = true;
+            cpfPixKey.hidden = true;
+        } else if (selectedPixType == "email") {
+            phonePixKey.hidden = true;
+            emailPixKey.hidden = false;
+            cpfPixKey.hidden = true;
+        } else {
+            phonePixKey.hidden = true;
+            emailPixKey.hidden = true;
+            cpfPixKey.hidden = false;
+        }
+    }
+
     const handleQRCodeTypeChange = (e) => {
-        var selectedType = e.target.value;
+        selectedType = e.target.value;
         var msgInput = document.getElementById("msgHeader");
-        var divPixType = document.getElementById("pixType");
+        var divPixType = document.getElementById("pixData");
+        var divQRCode = document.getElementById("qrcode");
         if (selectedType == "Pix") {
             msgInput.textContent = "Insira a sua chave Pix";
-            divPixType.innerHTML = `
-            <div>
-                <h3>Selecione sua chave pix:</h3>
-                <input type="radio" id="cpf" name="pixType" value="cpf defaultChecked">
-                <label htmlFor="cpf">CPF</label>
-
-                <input type="radio" id="email" name="pixType" value="email">
-                <label htmlFor="email">Email</label>
-
-                <input type="radio" id="phone" name="pixType" value="phone">
-                <label htmlFor="phone">Telefone</label>
-            <div>
-            `;
-            //Sets the cpf field as selected by default
-            var pixTypeField = document.getElementsByName("pixType");
-            pixTypeField[0].checked = true;
+            divPixType.hidden = false;
+            divQRCode.hidden = true;
         } else if (selectedType == "Link") {
             msgInput.textContent = "Insira o seu link (URL)";
-            divPixType.innerHTML = "";
+            divPixType.hidden = true;
+            divQRCode.hidden = false;
         } else {
             msgInput.textContent = "Insira o seu texto";
-            divPixType.innerHTML = "";
+            divPixType.hidden = true;
+            divQRCode.hidden = false;
         }
     }
     return (
@@ -58,14 +75,50 @@ const Index = () => {
             <input name="qr-type" type="radio" id="Pix" value="Pix" onClick={handleQRCodeTypeChange} ></input>
             <label htmlFor="Pix">Pix</label>
 
+            <div id="pixData" hidden>
+                <br></br>
+                <p>Selecione sua chave pix:</p>
+                <input type="radio" id="cpf" name="pixType" value="cpf" onClick={handlePixKeyTypeChange} defaultChecked></input>
+                <label htmlFor="cpf">CPF</label>
+
+                <input type="radio" id="email" name="pixType" value="email" onClick={handlePixKeyTypeChange}></input>
+                <label htmlFor="email">Email</label>
+
+                <input type="radio" id="phone" name="pixType" value="phone" onClick={handlePixKeyTypeChange}></input>
+                <label htmlFor="phone">Telefone</label>
+
+                <div id="cpfPixKey">
+                    <p>Informe sua chave pix:</p>
+                    <input type="text" name="pixKey" id="pixKey" placeholder="(99)99999-9999"></input>
+                </div>
+                <div id="phonePixKey" hidden>
+                    <p>Informe sua chave pix:</p>
+                    <input type="text" name="pixKey" id="pixKey"></input>
+                </div>
+                <div id="emailPixKey" hidden>
+                    <p>Informe sua chave pix:</p>
+                    <input type="text" name="pixKey" id="pixKey"></input>
+                </div>
+
+                <p>Informe seu nome:</p>
+                <input type="text" name="pixName" id="pixName"></input>
+
+                <p>Informe sua cidade:</p>
+                <input type="text" name="pixCity" id="pixCity"></input>
+
+                <br></br>
+                <br></br>
+                <button type="submit" id="btn" onClick={handleClick}>Gerar PIX QR-Code</button>
+            </div>
+
             <br></br>
 
-            <h3 id="msgHeader">Seu texto do QR-Code</h3>
-            
-            <input name="msg" id="msg"></input>
-            <button type="submit" id="btn" onClick={handleClick}>Gerar QR-Code</button>
-
-            <div id="pixType"></div>
+            <div id="qrcode">
+                <h3 id="msgHeader">Seu texto do QR-Code</h3>
+                
+                <input name="msg" id="msg"></input>
+                <button type="submit" id="btn" onClick={handleClick}>Gerar QR-Code</button>
+            </div>
         </>
     )
 }
