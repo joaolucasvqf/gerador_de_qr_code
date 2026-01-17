@@ -60,7 +60,7 @@ const Index = () => {
     }
     return (
         <>
-            <h1>Insira o a mensagem ou link a ser utilizado no QR-Code:</h1>
+            <h1>Insira a sua mensagem ou link a ser utilizado no QR-Code:</h1>
 
             <br></br>
 
